@@ -109,5 +109,34 @@ AI-Powered-Learning-Assistant-App/
 
 ## 📸 Screenshots
 
-![App screenshot](<Screenshot 2026-06-08 192321.png>)
-![App screenshot](image.png)
+#### Login Page 
+<img width="1414" height="739" alt="login" src="https://github.com/user-attachments/assets/a7af02d1-0005-411b-9d3b-b5840b809ab3" />
+
+#### Dashboard Page 
+<img width="1896" height="943" alt="dashboard" src="https://github.com/user-attachments/assets/662a251a-dfd4-4985-aba8-6cc77b7bf744" />
+
+#### Documents Page 
+<img width="1878" height="877" alt="Documentpage" src="https://github.com/user-attachments/assets/ae6ec9ab-b42b-47f8-a724-e1a28e84be5f" />
+
+#### uploaded Content render
+<img width="1878" height="877" alt="pdf-view" src="https://github.com/user-attachments/assets/6a219bbb-e546-47fd-9554-d1c4b256b0ec" />
+
+#### Chat History 
+
+<img width="1878" height="877" alt="chat" src="https://github.com/user-attachments/assets/b58c1f16-fcb2-42ce-89cf-8b9ced1fa450" />
+
+
+#### AI Actions
+<img width="1903" height="681" alt="Ai-actions" src="https://github.com/user-attachments/assets/8cdfaa75-ee8e-4f68-86ca-d0d597dd84e9" />
+
+
+#### Flashcards
+<img width="1908" height="815" alt="flashcard" src="https://github.com/user-attachments/assets/35980a65-43cf-42e9-ab35-386c28d7f2f9" />
+
+
+#### Flashcard sets Page
+![flashcard-sets](https://github.com/user-attachments/assets/6c612d52-f011-48dc-85d2-93abe1b07ff0)
+
+
+#### Quiz Results
+<img width="1920" height="898" alt="Quiz" src="https://github.com/user-attachments/assets/43b1dfca-9305-46d4-86cc-b25a9b236e03" />
