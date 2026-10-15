@@ -140,3 +140,21 @@ AI-Powered-Learning-Assistant-App/
 
 #### Quiz Results
 <img width="1920" height="898" alt="Quiz" src="https://github.com/user-attachments/assets/43b1dfca-9305-46d4-86cc-b25a9b236e03" />
+
+#### Study Plan Input 
+<img width="1912" height="858" alt="study-plan-generator" src="https://github.com/user-attachments/assets/e6f2bddb-16bd-4741-87ee-9937cdd3390f" />
+
+
+#### Study plan Output 
+<img width="1916" height="893" alt="generated plan" src="https://github.com/user-attachments/assets/c517cb89-6894-423d-b6fa-846a38d2c0b4" />
+
+
+#### Agent Input 
+
+<img width="1916" height="893" alt="study-agent" src="https://github.com/user-attachments/assets/7f3df4b7-b4e3-4f50-a5c7-485773fa596c" />
+
+
+#### Agent Output 
+
+<img width="1916" height="893" alt="agent-output" src="https://github.com/user-attachments/assets/fa6e9e29-f802-4f81-a4ff-411223e45797" />
+
