@@ -1,4 +1,5 @@
-export const BASE_URL = "https://ai-powered-learning-assistant-app-qw6n.onrender.com";
+// export const BASE_URL = "https://ai-powered-learning-assistant-app-qw6n.onrender.com";
+export const BASE_URL = "http://localhost:8000";
 
 export const API_PATHS = {
     AUTH: {
@@ -21,7 +22,11 @@ export const API_PATHS = {
         GENERATE_SUMMARY: "/api/ai/generate-summary",
         CHAT: "/api/ai/chat",
         EXPLAIN_CONCEPT: "/api/ai/explain-concept",
+        GENERATE_STUDY_PLAN: "/api/ai/generate-study-plan",
         GET_CHAT_HISTORY: (documentId) => `/api/ai/chat-history/${documentId}`
+    },
+    AGENT: {
+        ASK: "/api/agent/ask"
     },
     FLASHCARDS: {
         GET_ALL_FLASHCARD_SETS: "/api/flashcards",

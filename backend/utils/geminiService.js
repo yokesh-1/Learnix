@@ -30,7 +30,7 @@ ${text.substring(0, 15000)}`;
 
 try{
     const response = await ai.models.generateContent({
-  model: "gemini-2.5-flash-lite",
+  model: "gemini-3.5-flash-lite",
   contents: prompt,
 });
 
@@ -94,7 +94,7 @@ ${text.substring(0, 15000)}`;
 
 try {
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash-lite",
+    model: "gemini-3.5-flash-lite",
     contents: prompt,
   });
 
@@ -149,7 +149,7 @@ export const generateSummary = async (text) => {
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
+      model: "gemini-3.5-flash-lite",
       contents: prompt,
     });
   const generatedText = response.text;
@@ -181,7 +181,7 @@ Answer:`;
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
+      model: "gemini-3.5-flash-lite",
       contents: prompt,
     });
     const generatedText = response.text;
@@ -209,7 +209,7 @@ export const explainConcept = async (concept, context) => {
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
+      model: "gemini-3.5-flash-lite",
       contents: prompt,
     });
     const generatedText = response.text;
@@ -222,3 +222,85 @@ export const explainConcept = async (concept, context) => {
 
 
 
+
+/**
+ * Generate a day-by-day study plan.
+ * Works from either a document's text or a free-text topic.
+ * @param {object} params
+ * @param {string} [params.text] - Document text (optional)
+ * @param {string} [params.topic] - Topic to study (optional, used when no document)
+ * @param {number} params.days - Number of days for the plan
+ * @param {string} [params.dailyMinutes] - Time available per day (e.g. "60")
+ * @param {string} [params.goal] - Optional learning goal/exam focus
+ * @returns {Promise<{title: string, overview: string, days: Array<{day: number, title: string, focus: string, tasks: string[], estimatedMinutes: number}>}>}
+ */
+export const generateStudyPlan = async ({ text = '', topic = '', days = 7, dailyMinutes = '60', goal = '' }) => {
+  const source = text
+    ? `Base the plan on the following study material:\n${text.substring(0, 15000)}`
+    : `Base the plan on the topic: "${topic}".`;
+
+  const prompt = `You are an expert study coach. Create a realistic, motivating ${days}-day study plan.
+${source}
+
+Constraints:
+- The learner has about ${dailyMinutes} minutes available per day.
+${goal ? `- Learning goal: ${goal}` : ''}
+- Progress logically from fundamentals to advanced topics, ending with review/practice.
+
+Respond ONLY with valid JSON (no markdown fences, no extra text) in exactly this shape:
+{
+  "title": "string - a short title for the plan",
+  "overview": "string - 1-2 sentence overview",
+  "days": [
+    {
+      "day": 1,
+      "title": "string - short title for the day",
+      "focus": "string - the main focus/topic of the day",
+      "tasks": ["string task 1", "string task 2"],
+      "estimatedMinutes": 60
+    }
+  ]
+}
+The "days" array must contain exactly ${days} items.`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash-lite",
+      contents: prompt,
+    });
+
+    let generatedText = (response.text || '').trim();
+
+    // Strip markdown code fences if the model added them
+    generatedText = generatedText
+      .replace(/^```(?:json)?/i, '')
+      .replace(/```$/i, '')
+      .trim();
+
+    // Extract the JSON object defensively
+    const firstBrace = generatedText.indexOf('{');
+    const lastBrace = generatedText.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      generatedText = generatedText.substring(firstBrace, lastBrace + 1);
+    }
+
+    const plan = JSON.parse(generatedText);
+
+    // Basic normalization
+    if (!Array.isArray(plan.days)) {
+      plan.days = [];
+    }
+    plan.days = plan.days.map((d, i) => ({
+      day: d.day || i + 1,
+      title: d.title || `Day ${i + 1}`,
+      focus: d.focus || '',
+      tasks: Array.isArray(d.tasks) ? d.tasks : [],
+      estimatedMinutes: Number(d.estimatedMinutes) || Number(dailyMinutes) || 60
+    }));
+
+    return plan;
+  } catch (error) {
+    console.error('Gemini API error:', error);
+    throw new Error('Failed to generate study plan');
+  }
+};

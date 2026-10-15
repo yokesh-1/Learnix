@@ -299,6 +299,69 @@ export const explainConcept = async (req, res, next) => {
 
 };
 
+// @desc    Generate a day-by-day study plan (from a document OR a free-text topic)
+// @route   POST /api/ai/generate-study-plan
+// @access  Private
+export const generateStudyPlan = async (req, res, next) => {
+  try {
+    const { documentId, topic, days = 7, dailyMinutes = 60, goal = '' } = req.body;
+
+    const numDays = Math.min(Math.max(parseInt(days) || 7, 1), 30);
+
+    // Must provide either a document or a topic
+    if (!documentId && (!topic || !topic.trim())) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide either a documentId or a topic',
+        statusCode: 400
+      });
+    }
+
+    let text = '';
+    let title = topic ? topic.trim() : 'Study Plan';
+
+    if (documentId) {
+      const document = await Document.findOne({
+        _id: documentId,
+        userId: req.user._id,
+        status: 'ready'
+      });
+
+      if (!document) {
+        return res.status(404).json({
+          success: false,
+          error: 'Document not found or not ready',
+          statusCode: 404
+        });
+      }
+
+      text = document.extractedText;
+      title = document.title;
+    }
+
+    const plan = await geminiService.generateStudyPlan({
+      text,
+      topic: topic ? topic.trim() : '',
+      days: numDays,
+      dailyMinutes: String(dailyMinutes),
+      goal: goal ? goal.trim() : ''
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        documentId: documentId || null,
+        source: documentId ? title : topic.trim(),
+        days: numDays,
+        plan
+      },
+      message: 'Study plan generated successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Get chat history for a document
 // @route   GET /api/ai/chat-history/:documentId
 // @access  Private

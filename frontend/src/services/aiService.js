@@ -55,6 +55,17 @@ const getChatHistory = async (documentId) => {
   }
 };
 
+// Generate a day-by-day study plan.
+// Pass either { documentId } or { topic }, plus options like days/dailyMinutes/goal.
+const generateStudyPlan = async (payload) => {
+  try {
+    const response = await axiosInstance.post(API_PATHS.AI.GENERATE_STUDY_PLAN, payload);
+    return response.data?.data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Failed to generate study plan' };
+  }
+};
+
 const aiService = {
   generateFlashcards,
   generateQuiz,
@@ -62,6 +73,7 @@ const aiService = {
   chat,
   explainConcept,
   getChatHistory,
+  generateStudyPlan,
 };
 
 export default aiService;

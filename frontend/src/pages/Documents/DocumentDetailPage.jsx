@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import  { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom';
 import documentService from '../../services/documentService';
 import Spinner from '../../components/common/Spinner';
@@ -8,6 +8,8 @@ import PageHeader from '../../components/common/PageHeader';
 import Tabs from '../../components/common/Tabs';
 import ChatInterface from '../../components/chat/ChatInterface';
 import AIActions from '../../components/ai/AIActions';
+import StudyPlanGenerator from '../../components/ai/StudyPlanGenerator'
+import StudyAgent from '../../components/ai/StudyAgent';
 import FlashcardManager from '../../components/flashcards/FlashcardManager';
 import Flashcard from '../../components/flashcards/Flashcard';
 import QuizManager from '../../components/quizzes/QuizManager';
@@ -109,6 +111,15 @@ const DocumentDetailPage = () => {
   const renderAIActions = () => {
     return <AIActions />
   }
+
+  const renderStudyPlanTab = () => {
+    return <StudyPlanGenerator />
+  }
+
+    const renderAgentTab = () => {
+    return <StudyAgent />
+  }
+
   const renderFlashcardsTab = () =>{
     return <FlashcardManager documentId={id} />
   }
@@ -120,6 +131,8 @@ const DocumentDetailPage = () => {
     { name: 'Content', label: 'Content', content: renderContent() },
     { name: 'Chat', label: 'Chat', content: renderChat() },
     { name: 'AI Actions', label: 'AI Actions', content: renderAIActions() },
+    { name: 'Study Plan', label: 'Study Plan', content: renderStudyPlanTab() },
+    { name: 'Agent', label: 'Agent', content: renderAgentTab() },
     { name: 'Flashcards', label: 'Flashcards', content: renderFlashcardsTab() },
     { name: 'Quizzes', label: 'Quizzes', content: renderQuizzesTab() },
   ]
