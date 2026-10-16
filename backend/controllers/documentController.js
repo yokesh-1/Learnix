@@ -6,56 +6,58 @@ import fs from 'node:fs/promises';
 import mongoose from 'mongoose';
 
 // Upload PDF document
+
+
 export const uploadDocument = async (req, res, next) => {
     try {
         if (!req.file) {
             return res.status(400).json({
                 success: false,
                 error: 'Please upload a PDF file',
-                statusCode: 400,
             });
         }
 
         const { title } = req.body;
 
         if (!title) {
-            await fs.unlink(req.file.path).catch(() => {});
-
             return res.status(400).json({
                 success: false,
                 error: 'Please provide a title',
-                statusCode: 400,
             });
         }
 
-        const fileUrl = `/uploads/documents/${req.file.filename}`;
+        // Save PDF text and metadata in MongoDB.
+        // The uploaded PDF itself is not stored permanently.
+        const { extractTextFromPDF } =
+            await import('../utils/pdfParser.js');
+
+        const { text } = await extractTextFromPDF(
+            new Uint8Array(req.file.buffer)
+        );
+
+        const chunks = chunkText(text, 500, 50);
 
         const document = await Document.create({
             userId: req.user._id,
             title,
             fileName: req.file.originalname,
-            filePath: fileUrl,
+            filePath: '',
             fileSize: req.file.size,
-            status: 'processing',
-        });
-
-        // Process PDF separately from application startup
-        processPDF(document._id, req.file.path).catch((error) => {
-            console.error('PDF processing error:', error);
+            extractedText: text,
+            chunks,
+            status: 'ready',
         });
 
         return res.status(201).json({
             success: true,
             data: document,
-            message: 'Document uploaded successfully. Processing in progress...',
+            message: 'PDF uploaded and processed successfully',
         });
     } catch (error) {
-        if (req.file) {
-            await fs.unlink(req.file.path).catch(() => {});
-        }
         next(error);
     }
 };
+
 
 // Process PDF using a dynamic import
 const processPDF = async (documentId, filePath) => {
